@@ -6,13 +6,14 @@ export const ONLINE_VIDEO_URL = 'https://vid.ly/5u4h3e?content=video'
 export const PREVIEW = 'Preview'
 export const PLAY_BACK_SPEED = 'Playback speed'
 export const CROPPER_ASPECT_RATIO = 'Cropper Aspect Ratio'
-export const PLEASE_CLICK_ON_START_CROPPER_TO_GENERATE_PREVIEW = 'Please click on Start Cropper to generate preview'
-export const CROPPER = "Cropper";
-export const PREVIEW_BUTTON_TEXT = "Preview Session";
-export const GENERATE_SESSION_BUTTON_TEXT = "Generate Session";
-export const START_CROPPER_BUTTON_TEXT = "Start Cropper";
-export const REMOVE_CROPPER_BUTTON_TEXT = "Remove Cropper";
-export const GENERATE_PREVIEW_BUTTON_TEXT = "Generate Preview";
+export const PLEASE_CLICK_ON_START_CROPPER_TO_GENERATE_PREVIEW =
+  'Please click on Start Cropper to generate preview'
+export const CROPPER = 'Cropper'
+export const PREVIEW_BUTTON_TEXT = 'Preview Session'
+export const GENERATE_SESSION_BUTTON_TEXT = 'Generate Session'
+export const START_CROPPER_BUTTON_TEXT = 'Start Cropper'
+export const REMOVE_CROPPER_BUTTON_TEXT = 'Remove Cropper'
+export const GENERATE_PREVIEW_BUTTON_TEXT = 'Generate Preview'
 export const ASPECT_RATIOS = {
   '9:18': 9 / 18,
   '9:16': 9 / 16,

@@ -1,6 +1,10 @@
 import React from 'react'
 import styles from '../styles/Home.module.css'
-import { CROPPER, GENERATE_SESSION_BUTTON_TEXT, PREVIEW_BUTTON_TEXT } from '@/constants/constants'
+import {
+  CROPPER,
+  GENERATE_SESSION_BUTTON_TEXT,
+  PREVIEW_BUTTON_TEXT,
+} from '@/constants/constants'
 
 const NavBar = () => {
   return (

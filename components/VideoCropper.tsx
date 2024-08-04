@@ -9,9 +9,9 @@ import { PLEASE_CLICK_ON_START_CROPPER_TO_GENERATE_PREVIEW } from '@/constants/c
 const VideoCropper = () => {
   const [showCropper, setShowCropper] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
-  
+
   useEffect(() => {
-    if(!showCropper) {
+    if (!showCropper) {
       setShowPreview(false)
     }
   }, [showCropper])

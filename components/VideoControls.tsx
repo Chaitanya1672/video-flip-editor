@@ -90,7 +90,7 @@ function VideoControls({
         width: '100%',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', marginTop: '4px'  }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginTop: '4px' }}>
         <IconButton
           sx={{ padding: 0, color: '#fff' }}
           onClick={() => setPlaying(!playing)}

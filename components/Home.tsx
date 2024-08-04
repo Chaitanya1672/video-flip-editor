@@ -4,7 +4,6 @@ import VideoCropper from '../components/VideoCropper'
 import styles from '../styles/Home.module.css'
 
 const Home: React.FC = () => {
-
   return (
     <div className={styles.container}>
       <Head>
