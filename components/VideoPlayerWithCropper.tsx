@@ -50,6 +50,7 @@ const VideoPlayerWithCropper = ({ showCropper, showPreview }: Props) => {
   }, [aspectRatio])
 
   useEffect(() => {
+    playerRef && playerRef.current?.seekTo(currentTime)
     previePlayerRef && previePlayerRef.current?.seekTo(currentTime)
   }, [currentTime])
 
