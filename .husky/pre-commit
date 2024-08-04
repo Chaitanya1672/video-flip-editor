@@ -1,0 +1,10 @@
+# Formats staged code using prettier
+# Checks and fixes all lint issues in code which don't require manual intervention.
+# Throws errors if lint issues requiring manual intervention are found in code.
+npm run lint-staged
+
+# Check for merge conflicts
+git diff --check | grep -E '<<<<<|>>>>>' && echo "Merge conflicts detected" && exit 1
+
+# Add the changes made to the stage
+git add .
