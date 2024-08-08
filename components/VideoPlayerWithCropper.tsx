@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import VideoControls from './VideoControls'
 import { ReactPlayerProps } from 'react-player'
 import { Box, Grid, IconButton, Typography } from '@mui/material'
@@ -11,17 +11,23 @@ import {
   PREVIEW_NOT_AVAILABLE,
   VIDEO_URL,
 } from '@/constants/constants'
+import Draggable from 'react-draggable'
 
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false })
 interface Props {
   showCropper: boolean
   showPreview: boolean
+  setRecordingData: (data: any) => void
 }
 
-const VideoPlayerWithCropper = ({ showCropper, showPreview }: Props) => {
+const VideoPlayerWithCropper = ({
+  showCropper,
+  showPreview,
+  setRecordingData,
+}: Props) => {
   const playerRef: any = useRef<ReactPlayerProps>(null)
   const previePlayerRef: any = useRef<ReactPlayerProps>(null)
-  const wrapperRef = useRef<any>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const [playing, setPlaying] = useState(false)
   const [volume, setVolume] = useState(0.5)
   const [playbackRate, setPlaybackRate] = useState(1)
@@ -30,9 +36,6 @@ const VideoPlayerWithCropper = ({ showCropper, showPreview }: Props) => {
   const [aspectRatio, setAspectRatio] = useState(9 / 16)
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
-  const [isDragging, setIsDragging] = useState(false)
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
-
   const updateCropperSize = () => {
     if (!wrapperRef.current) return
     const { clientWidth, clientHeight } = wrapperRef.current
@@ -40,7 +43,6 @@ const VideoPlayerWithCropper = ({ showCropper, showPreview }: Props) => {
     const newWidth = newHeight * aspectRatio
     setCropperSize({ width: newWidth, height: newHeight })
     setCropperPosition({ x: (clientWidth - newWidth) / 2, y: 0 })
-    setDragStart({ x: (clientWidth - newWidth) / 2, y: 0 })
   }
 
   useEffect(() => {
@@ -71,50 +73,22 @@ const VideoPlayerWithCropper = ({ showCropper, showPreview }: Props) => {
     setDuration(duration)
   }
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      setIsDragging(true)
-      setDragStart({
-        x: e.clientX - cropperPosition.x,
-        y: e.clientY - cropperPosition.y,
-      })
-    },
-    [cropperPosition],
-  )
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (isDragging && wrapperRef.current) {
-        const wrapperRect = wrapperRef.current.getBoundingClientRect()
-        const newX = e.clientX - wrapperRect.left - dragStart.x
-        const newY = e.clientY - wrapperRect.top - dragStart.y
-
-        const maxX = wrapperRect.width - cropperSize.width
-        const maxY = wrapperRect.height - cropperSize.height
-
-        setCropperPosition({
-          x: Math.max(0, Math.min(newX, maxX)),
-          y: Math.max(0, Math.min(newY, maxY)),
-        })
-      }
-    },
-    [isDragging, dragStart, cropperSize.width, cropperSize.height],
-  )
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false)
-  }, [])
-
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove)
-        document.removeEventListener('mouseup', handleMouseUp)
-      }
+  const handleDrag = (e: any, ui: any) => {
+    const { x, y } = ui
+    console.log(x, y)
+    setCropperPosition({ x, y })
+    if (showPreview) {
+      setRecordingData((prevData: any) => [
+        ...prevData,
+        {
+          timeStamp: currentTime,
+          coordinates: [x, y, cropperSize.width, cropperSize.height],
+          volume: volume,
+          playbackRate: playbackRate,
+        },
+      ])
     }
-  }, [isDragging, handleMouseMove, handleMouseUp])
+  }
 
   return (
     <div className={styles.videoCropperContainer}>
@@ -130,7 +104,7 @@ const VideoPlayerWithCropper = ({ showCropper, showPreview }: Props) => {
             volume={volume}
             playbackRate={playbackRate}
             onDuration={handleDuration}
-            onReady={(player): any => (playerRef.current = player)}
+            onReady={(player) => (playerRef.current = player)}
             width="100%"
             height="100%"
             style={{
@@ -142,41 +116,55 @@ const VideoPlayerWithCropper = ({ showCropper, showPreview }: Props) => {
             }}
           />
           {showCropper && (
-            <Box
-              sx={{
+            <div
+              style={{
                 position: 'absolute',
-                top: cropperPosition.y,
-                left: cropperPosition.x,
-                width: cropperSize.width,
-                height: cropperSize.height,
-                border: '2px solid white',
-                boxSizing: 'border-box',
-                cursor: 'move',
+                top: 0,
+                left: 0,
+                zIndex: 999,
+                width: '100%',
+                height: '100%',
               }}
-              onMouseDown={handleMouseDown}
             >
-              <Grid container sx={{ height: '100%' }}>
-                {[0, 1, 2].map((row) =>
-                  [0, 1, 2].map((col) => (
-                    <Grid
-                      item
-                      xs={4}
-                      key={`${row}-${col}`}
-                      sx={{
-                        borderRight:
-                          col < 2
-                            ? '1px dotted rgba(255, 255, 255, 0.7)'
-                            : 'none',
-                        borderBottom:
-                          row < 2
-                            ? '1px dotted rgba(255, 255, 255, 0.7)'
-                            : 'none',
-                      }}
-                    />
-                  )),
-                )}
-              </Grid>
-            </Box>
+              <Draggable
+                position={cropperPosition}
+                onDrag={handleDrag}
+                bounds="parent"
+                axis="both"
+              >
+                <Box
+                  sx={{
+                    width: cropperSize.width,
+                    height: cropperSize.height,
+                    border: '2px solid white',
+                    boxSizing: 'border-box',
+                    cursor: 'move',
+                  }}
+                >
+                  <Grid container sx={{ height: '100%' }}>
+                    {[0, 1, 2].map((row) =>
+                      [0, 1, 2].map((col) => (
+                        <Grid
+                          item
+                          xs={4}
+                          key={`${row}-${col}`}
+                          sx={{
+                            borderRight:
+                              col < 2
+                                ? '1px dotted rgba(255, 255, 255, 0.7)'
+                                : 'none',
+                            borderBottom:
+                              row < 2
+                                ? '1px dotted rgba(255, 255, 255, 0.7)'
+                                : 'none',
+                          }}
+                        />
+                      )),
+                    )}
+                  </Grid>
+                </Box>
+              </Draggable>
+            </div>
           )}
         </div>
         <VideoControls

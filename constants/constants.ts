@@ -14,6 +14,9 @@ export const GENERATE_SESSION_BUTTON_TEXT = 'Generate Session'
 export const START_CROPPER_BUTTON_TEXT = 'Start Cropper'
 export const REMOVE_CROPPER_BUTTON_TEXT = 'Remove Cropper'
 export const GENERATE_PREVIEW_BUTTON_TEXT = 'Generate Preview'
+export const DOWNLOAD_JSON = 'Download JSON'
+export const PLEASE_RECORD_DATA_TO_GENERATE_SESSION =
+  'Please record data to generate session'
 export const ASPECT_RATIOS = {
   '9:18': 9 / 18,
   '9:16': 9 / 16,

@@ -6,13 +6,28 @@ import {
   PREVIEW_BUTTON_TEXT,
 } from '@/constants/constants'
 
-const NavBar = () => {
+interface Props {
+  handleShowPreviewSession: (showPreviewSession: boolean) => void
+  showPreviewSession: boolean
+}
+
+const NavBar = ({ handleShowPreviewSession, showPreviewSession }: Props) => {
   return (
     <div className={styles.header}>
       <h1>{CROPPER}</h1>
       <div className={styles.buttons}>
-        <button>{PREVIEW_BUTTON_TEXT}</button>
-        <button>{GENERATE_SESSION_BUTTON_TEXT}</button>
+        <button
+          onClick={() => handleShowPreviewSession(true)}
+          className={`${showPreviewSession ? styles.active : ''}`}
+        >
+          {PREVIEW_BUTTON_TEXT}
+        </button>
+        <button
+          onClick={() => handleShowPreviewSession(false)}
+          className={`${!showPreviewSession ? styles.active : ''}`}
+        >
+          {GENERATE_SESSION_BUTTON_TEXT}
+        </button>
       </div>
     </div>
   )

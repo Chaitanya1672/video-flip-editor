@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from '../styles/Home.module.css'
 import {
+  DOWNLOAD_JSON,
   GENERATE_PREVIEW_BUTTON_TEXT,
   REMOVE_CROPPER_BUTTON_TEXT,
   START_CROPPER_BUTTON_TEXT,
@@ -9,8 +10,15 @@ import {
 interface Props {
   generatePreview: () => void
   setShowCropper: (showCropper: boolean) => void
+  downloadJSON: () => void
+  showPreview: boolean
 }
-const Footer = ({ generatePreview, setShowCropper }: Props) => {
+const Footer = ({
+  generatePreview,
+  setShowCropper,
+  downloadJSON,
+  showPreview,
+}: Props) => {
   return (
     <div className={styles.footer}>
       <div className={styles.footerButtons}>
@@ -23,6 +31,7 @@ const Footer = ({ generatePreview, setShowCropper }: Props) => {
         <button onClick={generatePreview}>
           {GENERATE_PREVIEW_BUTTON_TEXT}
         </button>
+        {showPreview && <button onClick={downloadJSON}>{DOWNLOAD_JSON}</button>}
       </div>
       <button>Cancel</button>
     </div>

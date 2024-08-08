@@ -57,6 +57,10 @@
   background-color: #37393f;
 }
 
+.buttons .active {
+  background-color: #37393f;
+}
+
 .footer {
   display: flex;
   justify-content: space-between;
